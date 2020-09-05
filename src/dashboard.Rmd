@@ -1,5 +1,5 @@
 ---
-title: "Clase Flex Dashboards"
+title: "Academatica"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -13,6 +13,8 @@ if(!require("flexdashboard")) install.packages("flexdashboard")
 if(!require("dplyr")) install.packages("dplyr")
 if(!require("readxl")) install.packages("readxl")
 if(!require("DT")) install.packages("DT")
+if(!require("ggplot2")) install.packages("ggplot2")
+
 
 library(RMySQL)
 library("DBI")
@@ -20,6 +22,7 @@ library(flexdashboard)
 library(readr)
 library(dplyr)
 library(DT)
+library(ggplot2)
 ```
 
 
@@ -27,7 +30,6 @@ library(DT)
 mydb = dbConnect(MySQL(), user = 'root', password = 'root123', dbname='academatica_db', host = '192.168.144.2')
 
 
-dbListTables(mydb)
 stats<- as.data.frame(mydb%>% tbl("stats"))
 videos<- as.data.frame(mydb%>% tbl("videos"))
 metadata<- as.data.frame(mydb%>% tbl("metadata"))
@@ -48,12 +50,20 @@ vids <- videos %>%
   rename(id = contentDetailsvideoId, date = contentDetailsvideoPublishedAt) %>% 
   arrange(id)
 
+vidsData <- merge(vids,stats, by = "id")
 
-data <- merge(vids,stats, by = "id")
+vidsData <- merge(vidsData,meta, by = "id")
 
-data <- merge(data,meta, by = "id")
+vidsData <- vidsData %>% 
+  transform(date = as.Date(date),
+            viewCount = as.numeric(viewCount),
+            likeCount = as.numeric(likeCount),
+            dislikeCount = as.numeric(dislikeCount),
+            favoriteCount = as.numeric(favoriteCount),
+            commentCount = as.numeric(commentCount))
 
-DT::datatable(data)
+
+DT::datatable(vidsData)
 ```
 
 
@@ -68,13 +78,32 @@ valueBox(nrow(data),
 ```
 
 
-## views
+###
+
+```{r}
+valueBox(sum(vidsData$viewCount), 
+         caption = "Total de views",
+         icon = "fa-eye")
+```
 
 ###
 
 ```{r}
-valueBox(sum(data$viewCount), 
-         caption = "Total de views",
+valueBox(sum(vidsData$likeCount),
+         caption = "Total de likes",
+         icon = "fa-thumbs-up")
+```
+
+
+# views
+
+##
+
+###
+
+```{r}
+valueBox(mean(vidsData$viewCount), 
+         caption = "Promedio de views",
          icon = "fa-eye")
 ```
 
@@ -82,7 +111,7 @@ valueBox(sum(data$viewCount),
 ###
 
 ```{r}
-valueBox(max(data$viewCount), 
+valueBox(max(vidsData$viewCount), 
          caption = "Maximo de views",
          icon = "fa-arrow-alt-circle-up",
          color = "success")
@@ -91,26 +120,38 @@ valueBox(max(data$viewCount),
 ###
 
 ```{r}
-valueBox(min(data$viewCount), 
+valueBox(min(vidsData$viewCount), 
          caption = "Minimo de views",
          icon = "fa-arrow-alt-circle-down",
          color = "warning")
 ```
 
-## likes
+
+##
+
+```{r}
+options(scipen = 999)
+ggplot(data = vidsData, aes(x = date, y = viewCount))+
+  geom_line(color = "#00AFBB", size = 2)
+```
+
+
+# likes
+
+##
 
 ###
 
 ```{r}
-valueBox(sum(data$likeCount),
-         caption = "Total de likes",
+valueBox(mean(vidsData$likeCount),
+         caption = "Promedio de likes",
          icon = "fa-thumbs-up")
 ```
 
 ###
 
 ```{r}
-valueBox(max(data$likeCount), 
+valueBox(max(vidsData$likeCount), 
          caption = "Maximo de likes",
          icon = "fa-arrow-alt-circle-up",
          color = "success")
@@ -119,10 +160,17 @@ valueBox(max(data$likeCount),
 ###
 
 ```{r}
-valueBox(min(data$likeCount), 
+valueBox(min(vidsData$likeCount), 
          caption = "Minimo de likes",
          icon = "fa-arrow-alt-circle-down",
          color = "warning")
+```
+
+##
+
+```{r}
+ggplot(data = vidsData, aes(x = date, y = likeCount))+
+  geom_line(color = "#00AFBB", size = 2)
 ```
 
 
