@@ -127,12 +127,26 @@ valueBox(min(vidsData$viewCount),
 ```
 
 
-##
+Row {data-height=350}
+-------------------------------------
+    
+
+### Views a traves del tiempo 
 
 ```{r}
 options(scipen = 999)
 ggplot(data = vidsData, aes(x = date, y = viewCount))+
   geom_line(color = "#00AFBB", size = 2)
+```
+
+
+### Distribucion de las views 
+
+```{r}
+
+vidsData %>% 
+  ggplot(aes(x=viewCount)) + geom_density()
+
 ```
 
 
@@ -166,12 +180,29 @@ valueBox(min(vidsData$likeCount),
          color = "warning")
 ```
 
-##
 
+
+Row {data-height=350}
+-------------------------------------
+    
+
+
+### Likes a traves del tiempo 
 ```{r}
 ggplot(data = vidsData, aes(x = date, y = likeCount))+
   geom_line(color = "#00AFBB", size = 2)
 ```
+
+### Distribucion de las likes 
+
+
+```{r}
+
+vidsData %>% 
+  ggplot(aes(x=likeCount)) + geom_density()
+
+```
+
 
 
 
