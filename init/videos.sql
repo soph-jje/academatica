@@ -1,7 +1,7 @@
 CREATE TABLE videos(
-   kind                            VARCHAR(20) NOT NULL PRIMARY KEY
+   kind                            VARCHAR(20) NOT NULL 
   ,etag                            VARCHAR(27) NOT NULL
-  ,id                              VARCHAR(48) NOT NULL
+  ,id                              VARCHAR(48) NOT NULL PRIMARY KEY
   ,contentDetailsvideoId           VARCHAR(11) NOT NULL
   ,contentDetailsvideoPublishedAt  VARCHAR(20) NOT NULL
 );

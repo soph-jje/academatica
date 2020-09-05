@@ -1,7 +1,7 @@
 CREATE TABLE metadata(
    id          VARCHAR(11) NOT NULL PRIMARY KEY
-  ,title       VARCHAR(96) NOT NULL
-  ,videoDescription VARCHAR(2750) NOT NULL
+  ,title       VARCHAR(6000) NOT NULL
+  ,videoDescription VARCHAR(6000) NOT NULL
   ,iframe      VARCHAR(206) NOT NULL
   ,link        VARCHAR(28) NOT NULL
 );
