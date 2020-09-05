@@ -1,0 +1,141 @@
+---
+title: "Clase Flex Dashboards"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+--- 
+
+
+```{r}
+if(!require("RMySQL")) install.packages("RMySQL")
+if(!require("flexdashboard")) install.packages("flexdashboard")
+if(!require("dplyr")) install.packages("dplyr")
+if(!require("readxl")) install.packages("readxl")
+if(!require("DT")) install.packages("DT")
+
+library(RMySQL)
+library("DBI")
+library(flexdashboard)
+library(readr)
+library(dplyr)
+library(DT)
+```
+
+
+```{r}
+mydb = dbConnect(MySQL(), user = 'root', password = 'root123', dbname='academatica_db', host = '192.168.144.2')
+
+
+dbListTables(mydb)
+stats<- as.data.frame(mydb%>% tbl("stats"))
+videos<- as.data.frame(mydb%>% tbl("videos"))
+metadata<- as.data.frame(mydb%>% tbl("metadata"))
+```
+
+# Analisis Exploratorio
+
+
+##
+```{r}
+meta <- metadata %>% 
+  subset(select = c(id,title)) %>% 
+  arrange(id)
+
+
+vids <- videos %>% 
+  subset(select = c(contentDetailsvideoId,contentDetailsvideoPublishedAt)) %>%
+  rename(id = contentDetailsvideoId, date = contentDetailsvideoPublishedAt) %>% 
+  mutate(date = as.Date(vids$date))%>% 
+  arrange(id)
+
+
+data <- merge(vids,stats, by = "id")
+
+data <- merge(data,meta, by = "id")
+
+DT::datatable(data)
+```
+
+
+## videos
+
+###
+
+```{r}
+valueBox(nrow(data), 
+         caption = "Total de videos",
+         icon = "fa-youtube")
+```
+
+
+## views
+
+###
+
+```{r}
+valueBox(sum(data$viewCount), 
+         caption = "Total de views",
+         icon = "fa-eye")
+```
+
+
+###
+
+```{r}
+valueBox(max(data$viewCount), 
+         caption = "Total de Legendarios",
+         icon = "fa-arrow-alt-circle-up",
+         color = "success")
+```
+
+###
+
+```{r}
+valueBox(min(data$viewCount), 
+         caption = "Total de Legendarios",
+         icon = "fa-arrow-alt-circle-down",
+         color = "warning")
+```
+
+
+## likes
+
+###
+
+```{r}
+valueBox(sum(data$likeCount),
+         caption = "Total de likes",
+         icon = "fa-thumbs-up")
+```
+
+###
+
+```{r}
+valueBox(max(data$likeCount), 
+         caption = "Total de Legendarios",
+         icon = "fa-arrow-alt-circle-up",
+         color = "success")
+```
+
+###
+
+```{r}
+valueBox(min(data$likeCount), 
+         caption = "Total de Legendarios",
+         icon = "fa-arrow-alt-circle-down",
+         color = "warning")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
