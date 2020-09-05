@@ -46,7 +46,6 @@ meta <- metadata %>%
 vids <- videos %>% 
   subset(select = c(contentDetailsvideoId,contentDetailsvideoPublishedAt)) %>%
   rename(id = contentDetailsvideoId, date = contentDetailsvideoPublishedAt) %>% 
-  mutate(date = as.Date(vids$date))%>% 
   arrange(id)
 
 
@@ -97,7 +96,6 @@ valueBox(min(data$viewCount),
          icon = "fa-arrow-alt-circle-down",
          color = "warning")
 ```
-
 
 ## likes
 
