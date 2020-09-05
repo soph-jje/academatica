@@ -83,7 +83,7 @@ valueBox(sum(data$viewCount),
 
 ```{r}
 valueBox(max(data$viewCount), 
-         caption = "Total de Legendarios",
+         caption = "Maximo de views",
          icon = "fa-arrow-alt-circle-up",
          color = "success")
 ```
@@ -92,7 +92,7 @@ valueBox(max(data$viewCount),
 
 ```{r}
 valueBox(min(data$viewCount), 
-         caption = "Total de Legendarios",
+         caption = "Minimo de views",
          icon = "fa-arrow-alt-circle-down",
          color = "warning")
 ```
@@ -111,7 +111,7 @@ valueBox(sum(data$likeCount),
 
 ```{r}
 valueBox(max(data$likeCount), 
-         caption = "Total de Legendarios",
+         caption = "Maximo de likes",
          icon = "fa-arrow-alt-circle-up",
          color = "success")
 ```
@@ -120,7 +120,7 @@ valueBox(max(data$likeCount),
 
 ```{r}
 valueBox(min(data$likeCount), 
-         caption = "Total de Legendarios",
+         caption = "Minimo de likes",
          icon = "fa-arrow-alt-circle-down",
          color = "warning")
 ```
